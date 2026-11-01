@@ -70,22 +70,6 @@
             animation-delay: 12s;
         }
 
-        /* Летящие вверх частицы по всему сайту */
-        .particles-fixed {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        .particles-fixed .particle {
-            position: absolute;
-            bottom: -20px;
-            border-radius: 50%;
-            background: rgba(106, 48, 147, 0.25);
-            animation: rise linear infinite;
-        }
-
         :root {
             --primary-purple: #6a3093;
             --secondary-purple: #a044ff;
@@ -482,24 +466,10 @@
             left: 12%;
             animation-delay: 9s;
         }
-        .hero-bg .particle {
-            position: absolute;
-            bottom: -20px;
-            width: 6px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 50%;
-            animation: rise linear infinite;
-        }
         @keyframes float {
             0%, 100% { transform: translate(0, 0) scale(1); }
             33% { transform: translate(40px, -50px) scale(1.1); }
             66% { transform: translate(-30px, 30px) scale(0.95); }
-        }
-        @keyframes rise {
-            0% { transform: translateY(0); opacity: 0; }
-            10% { opacity: 0.8; }
-            100% { transform: translateY(-110vh); opacity: 0; }
         }
         .hero-brands,
         .hero h1,
@@ -1395,8 +1365,6 @@
     <div class="decor-blob decor-blob-3"></div>
 </div>
 
-<div class="particles-fixed" id="particlesFixed" aria-hidden="true"></div>
-
 <header class="header" id="header">
     <div class="nav-container">
         <div class="logo">
@@ -1445,13 +1413,6 @@
             <div class="blob blob-2"></div>
             <div class="blob blob-3"></div>
             <div class="blob blob-4"></div>
-            <div class="particle" style="left: 8%; animation-duration: 9s; animation-delay: 0s;"></div>
-            <div class="particle" style="left: 22%; animation-duration: 12s; animation-delay: 2s;"></div>
-            <div class="particle" style="left: 38%; animation-duration: 8s; animation-delay: 4s;"></div>
-            <div class="particle" style="left: 55%; animation-duration: 11s; animation-delay: 1s;"></div>
-            <div class="particle" style="left: 70%; animation-duration: 9s; animation-delay: 5s;"></div>
-            <div class="particle" style="left: 85%; animation-duration: 13s; animation-delay: 3s;"></div>
-            <div class="particle" style="left: 95%; animation-duration: 10s; animation-delay: 6s;"></div>
         </div>
         <div class="hero-brands">
             <figure>
@@ -1960,21 +1921,6 @@
     window.addEventListener('scroll', onBgScroll, { passive: true });
     window.addEventListener('resize', onBgScroll);
     updateBg();
-
-    // Летящие вверх частицы по всему сайту
-    const particlesLayer = document.getElementById('particlesFixed');
-    for (let i = 0; i < 25; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        const size = 4 + Math.random() * 6;
-        p.style.width = size + 'px';
-        p.style.height = size + 'px';
-        p.style.left = Math.random() * 100 + '%';
-        p.style.animationDuration = (8 + Math.random() * 10) + 's';
-        p.style.animationDelay = (Math.random() * 10) + 's';
-        p.style.opacity = 0.3 + Math.random() * 0.4;
-        particlesLayer.appendChild(p);
-    }
 
     // Модальное окно с доп. информацией
     function openInfoModal(title, text) {
