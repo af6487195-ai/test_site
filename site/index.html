@@ -82,15 +82,94 @@
             --shadow-lg: 0 15px 30px rgba(106, 48, 147, 0.15);
         }
 
-        /* Анимация элементов при скролле */
+        /* Анимация появления элементов при скролле */
         .animate-on-scroll {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            transform: translateY(48px) scale(0.96);
+            filter: blur(6px);
+            transition:
+                opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                filter 0.9s ease;
+            will-change: opacity, transform, filter;
         }
+        /* Заголовки секций — более выразительный «вылет» */
+        h2.animate-on-scroll {
+            transform: translateY(70px);
+        }
+
+        /* Карточки — эффектное 3D-появление с наклоном */
+        .stat-card.animate-on-scroll,
+        .company-info-item.animate-on-scroll,
+        .brand-card.animate-on-scroll,
+        .advantage-card.animate-on-scroll,
+        .service-card.animate-on-scroll,
+        .review-card.animate-on-scroll,
+        .contact-card.animate-on-scroll,
+        .step.animate-on-scroll {
+            transform: perspective(900px) rotateX(14deg) translateY(60px) scale(0.92);
+            transform-origin: center bottom;
+        }
+
+        /* Видимое состояние — объявлено ПОСЛЕ правил трансформаций,
+           чтобы перекрыть их (одинаковая специфичность решается порядком) */
         .animate-on-scroll.is-visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: none;
+            filter: blur(0);
+        }
+
+        /* Иконки внутри карточек — «пружинный» поп с поворотом */
+        .animate-on-scroll .fa-solid,
+        .animate-on-scroll .fa-brands {
+            display: inline-block;
+            opacity: 0;
+            transform: scale(0) rotate(-180deg);
+        }
+        .animate-on-scroll.is-visible .fa-solid,
+        .animate-on-scroll.is-visible .fa-brands {
+            animation: iconPop 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s both;
+        }
+        @keyframes iconPop {
+            0% { opacity: 0; transform: scale(0) rotate(-180deg); }
+            60% { opacity: 1; transform: scale(1.25) rotate(10deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        /* Звёзды рейтинга — каскадное появление */
+        .review-card.is-visible .review-stars {
+            animation: starsPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+        }
+        @keyframes starsPop {
+            0% { opacity: 0; transform: translateY(-12px) scale(0.5); letter-spacing: 14px; }
+            100% { opacity: 1; transform: translateY(0) scale(1); letter-spacing: 4px; }
+        }
+
+        /* Номера шагов — выезд слева */
+        .step .step-number {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        .step.is-visible .step-number {
+            animation: slideInLeft 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Отключение анимаций для пользователей с reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .animate-on-scroll,
+            .animate-on-scroll .fa-solid,
+            .animate-on-scroll .fa-brands,
+            .step .step-number {
+                opacity: 1 !important;
+                transform: none !important;
+                filter: none !important;
+                animation: none !important;
+                transition: none !important;
+            }
         }
 
         /* Навигация */
@@ -376,20 +455,29 @@
             font-size: 0.85rem;
             opacity: 0.85;
         }
-        .hero-badge,
-        .hero h1,
-        .hero p,
-        .hero-actions,
-        .hero-stats {
-            animation: heroFadeIn 1s ease both;
+        .hero-badge {
+            animation: heroPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s both;
         }
-        .hero h1 { animation-delay: 0.1s; }
-        .hero p { animation-delay: 0.2s; }
-        .hero-actions { animation-delay: 0.3s; }
-        .hero-stats { animation-delay: 0.4s; }
-        @keyframes heroFadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .hero h1 {
+            animation: heroRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+        }
+        .hero p {
+            animation: heroRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+        }
+        .hero-actions {
+            animation: heroPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s both;
+        }
+        .hero-stats {
+            animation: heroRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+        }
+        @keyframes heroRise {
+            from { opacity: 0; transform: translateY(35px); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+        @keyframes heroPop {
+            0% { opacity: 0; transform: scale(0.5); }
+            60% { opacity: 1; transform: scale(1.08); }
+            100% { opacity: 1; transform: scale(1); }
         }
         @media (max-width: 600px) {
             .hero-stats {
@@ -1073,7 +1161,8 @@
             background: #fff;
             border: 1px solid var(--light-purple);
             border-radius: var(--border-radius);
-            padding: 2rem;
+            padding: 2.75rem 2rem 2.5rem;
+            min-height: 480px;
             text-align: center;
             box-shadow: var(--shadow-sm);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -1083,12 +1172,13 @@
             box-shadow: var(--shadow-lg);
         }
         .contact-card-img {
-            width: 110px;
-            height: 110px;
+            width: 190px;
+            height: 190px;
             border-radius: 50%;
             object-fit: cover;
+            object-position: center 20%;
             border: 4px solid var(--light-purple);
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
         }
         .contact-card h3 {
             color: var(--primary-purple);
@@ -1818,12 +1908,30 @@
         header.classList.toggle('scrolled', window.scrollY > 50);
     });
 
+    // Каскадные задержки: элементы внутри одной сетки появляются по очереди
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        const siblings = Array.from(el.parentElement.children)
+            .filter(c => c.classList.contains('animate-on-scroll'));
+        const idx = siblings.indexOf(el);
+        if (idx > 0) {
+            el.style.transitionDelay = (idx * 0.1).toFixed(2) + 's';
+        }
+    });
+
     // Появление элементов при скролле
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                observer.unobserve(entry.target);
+                const el = entry.target;
+                el.classList.add('is-visible');
+                observer.unobserve(el);
+                // После появления: снимаем задержку и возвращаем быстрый
+                // transition, чтобы hover-эффекты карточек работали мгновенно
+                const delay = (parseFloat(el.style.transitionDelay) || 0) * 1000;
+                setTimeout(() => {
+                    el.style.transitionDelay = '';
+                    el.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease, filter 0.45s ease';
+                }, delay + 1000);
             }
         });
     }, { threshold: 0.15 });
