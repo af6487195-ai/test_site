@@ -270,6 +270,87 @@
             margin-bottom: 1.5rem;
             backdrop-filter: blur(4px);
         }
+        /* 🖼️ Брендовые фото WB и Ozon в шапке */
+        .hero-brands {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+        .hero-brands figure {
+            text-align: center;
+        }
+        .brand-photo {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.6);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            display: block;
+            margin: 0 auto;
+            transition: transform var(--transition-speed) ease;
+        }
+        .hero-brands figure:hover .brand-photo {
+            transform: scale(1.08);
+        }
+        .hero-brands figcaption {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            opacity: 0.95;
+        }
+        /* 🖼️ Брендовые фото-карточки в разделе "О компании" */
+        .brands-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 760px;
+            margin: 3rem auto 0;
+        }
+        .brand-card {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--light-purple);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .brand-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 48px rgba(106, 48, 147, 0.3);
+        }
+        .brand-card img {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            display: block;
+        }
+        .brand-card figcaption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2.2rem 1.2rem 0.9rem;
+            background: linear-gradient(180deg, rgba(44,26,75,0) 0%, rgba(44,26,75,0.75) 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.05rem;
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            .brands-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-brands {
+                gap: 1.5rem;
+            }
+            .brand-photo {
+                width: 76px;
+                height: 76px;
+            }
+        }
         .gradient-text {
             background: linear-gradient(90deg, #fff, #f3e8ff, #d9c2ff);
             -webkit-background-clip: text;
@@ -420,6 +501,7 @@
             10% { opacity: 0.8; }
             100% { transform: translateY(-110vh); opacity: 0; }
         }
+        .hero-brands,
         .hero h1,
         .hero p,
         .hero .cta-button,
@@ -535,6 +617,17 @@
             }
         }
         /* 🎨 Добавлены стили для фотографий */
+        /* 🖼️ Задний фон карточек из фото ВБ и Озон */
+        .card-photo-wb {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(246,239,255,0.82) 100%),
+                url('vb.jpg') center / cover no-repeat;
+        }
+        .card-photo-ozon {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(246,239,255,0.82) 100%),
+                url('ozon.jpg') center / cover no-repeat;
+        }
         .owner-card {
             text-align: center;
             padding: 1.5rem;
@@ -1360,6 +1453,16 @@
             <div class="particle" style="left: 85%; animation-duration: 13s; animation-delay: 3s;"></div>
             <div class="particle" style="left: 95%; animation-duration: 10s; animation-delay: 6s;"></div>
         </div>
+        <div class="hero-brands">
+            <figure>
+                <img src="vb.jpg" alt="Wildberries" class="brand-photo">
+                <figcaption>Wildberries</figcaption>
+            </figure>
+            <figure>
+                <img src="ozon.jpg" alt="Ozon" class="brand-photo">
+                <figcaption>Ozon</figcaption>
+            </figure>
+        </div>
         <div class="hero-badge">🚀 Более 70 ПВЗ открыто под моим руководством</div>
         <h1>Откройте ПВЗ,<br>который <span class="gradient-text">приносит прибыль</span></h1>
         <p>Ольга проведёт вас от идеи до работающего пункта выдачи Wildberries и Ozon: поможет с помещением, документами и обучением команды.</p>
@@ -1387,7 +1490,7 @@
         <h2 class="animate-on-scroll">О компании</h2>
         <div class="about-center animate-on-scroll">
             <div class="owner-card" onclick="openOwnerModal('olga')" role="button" tabindex="0" aria-label="Подробнее об Ольге">
-                <img src="olga.jpg.jpeg" alt="Ольга" class="owner-img">
+                <img src="KSY03309.jpg" alt="Ольга" class="owner-img">
                 <h4>Ольга</h4>
                 <p>Эксперт по Wildberries и Ozon, запуску новых точек.</p>
             </div>
@@ -1431,6 +1534,16 @@
                 <h4>Наша история</h4>
                 <p>Начала с одного пункта выдачи, а сегодня помогаю открывать точки в разных городах.</p>
             </div>
+        </div>
+        <div class="brands-grid">
+            <figure class="brand-card animate-on-scroll">
+                <img src="vb.jpg" alt="Wildberries">
+                <figcaption>Wildberries — пункты выдачи по всей стране</figcaption>
+            </figure>
+            <figure class="brand-card animate-on-scroll">
+                <img src="ozon.jpg" alt="Ozon">
+                <figcaption>Ozon — тысячи заказов каждый день</figcaption>
+            </figure>
         </div>
     </section>
 
@@ -1530,13 +1643,13 @@
             Выберите удобный формат сопровождения — я подстроюсь под ваши задачи и бюджет.
         </p>
         <div class="pricing-grid">
-            <div class="service-card animate-on-scroll" onclick="openInfoModal('Обычное ведение — 150 000 ₽', 'Что входит в онлайн-ведение:\n\n• Подбор помещения и проверка локации;\n• Помощь с документами и регистрацией ПВЗ;\n• Пошаговый план запуска и чек-листы;\n• Обучение персонала в онлайн-формате;\n• Сопровождение и консультации на всех этапах;\n• Разбор ошибок и рекомендации по улучшению работы.\n\nВы работаете в своём городе, а я веду вас по шагам и отвечаю на вопросы.')" role="button" tabindex="0" aria-label="Подробнее: Обычное ведение">
+            <div class="service-card card-photo-wb animate-on-scroll" onclick="openInfoModal('Обычное ведение — 150 000 ₽', 'Что входит в онлайн-ведение:\n\n• Подбор помещения и проверка локации;\n• Помощь с документами и регистрацией ПВЗ;\n• Пошаговый план запуска и чек-листы;\n• Обучение персонала в онлайн-формате;\n• Сопровождение и консультации на всех этапах;\n• Разбор ошибок и рекомендации по улучшению работы.\n\nВы работаете в своём городе, а я веду вас по шагам и отвечаю на вопросы.')" role="button" tabindex="0" aria-label="Подробнее: Обычное ведение">
                 <i class="fa-solid fa-laptop"></i>
                 <h4>Обычное ведение</h4>
                 <p>Открытие и ведение ПВЗ в онлайн-формате: ведём вас по шагам, вы — в своём городе.</p>
                 <div class="price">150 000 ₽</div>
             </div>
-            <div class="service-card featured animate-on-scroll" onclick="openInfoModal('Ведение + — 300 000 ₽', 'Что входит в формат «под ключ»:\n\n• Приезжаю в ваш город и беру процесс на себя;\n• Подбор помещения и переговоры с арендодателем;\n• Ремонт и подготовка точки к открытию;\n• Оформление документов и регистрация ПВЗ;\n• Обучение персонала на месте;\n• Запуск и первые дни работы вместе с вами;\n• Дальнейшее сопровождение и поддержка.\n\nВы получаете готовый работающий ПВЗ без вашего участия в рутине.')" role="button" tabindex="0" aria-label="Подробнее: Ведение +">
+            <div class="service-card featured card-photo-ozon animate-on-scroll" onclick="openInfoModal('Ведение + — 300 000 ₽', 'Что входит в формат «под ключ»:\n\n• Приезжаю в ваш город и беру процесс на себя;\n• Подбор помещения и переговоры с арендодателем;\n• Ремонт и подготовка точки к открытию;\n• Оформление документов и регистрация ПВЗ;\n• Обучение персонала на месте;\n• Запуск и первые дни работы вместе с вами;\n• Дальнейшее сопровождение и поддержка.\n\nВы получаете готовый работающий ПВЗ без вашего участия в рутине.')" role="button" tabindex="0" aria-label="Подробнее: Ведение +">
                 <span class="badge">Под ключ</span>
                 <i class="fa-solid fa-plane"></i>
                 <h4>Ведение +</h4>
@@ -1637,7 +1750,7 @@
         </p>
         <div class="contact-cards">
             <div class="contact-card animate-on-scroll">
-                <img src="olga.jpg.jpeg" alt="Ольга" class="contact-card-img">
+                <img src="KSY03309.jpg" alt="Ольга" class="contact-card-img">
                 <h3>Ольга</h3>
                 <p class="contact-card-role">Wildberries и Ozon · Открытие ПВЗ</p>
                 <div class="contact-card-links">
@@ -1770,7 +1883,7 @@
     // Модальное окно с биографией владельцев
     const ownerData = {
         olga: {
-            img: 'olga.jpg.jpeg',
+            img: 'KSY03309.jpg',
             name: 'Ольга',
             age: '39 лет',
             birthday: 'День рождения: 08.11.1986',
