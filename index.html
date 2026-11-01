@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 📝 Изменено название -->
+    <title>ПВЗ WB & OZON | Ольга</title>
+    
+    <!-- Подключение иконок Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='0' y='0' width='32' height='64' fill='%23cb11ab'/%3E%3Crect x='32' y='0' width='32' height='64' fill='%23005bff'/%3E%3Crect x='31' y='0' width='2' height='64' fill='white' opacity='0.7'/%3E%3Ctext x='16' y='42' font-family='Arial' font-size='20' font-weight='bold' fill='white' text-anchor='middle'%3EWB%3C/text%3E%3Ctext x='48' y='42' font-family='Arial' font-size='20' font-weight='bold' fill='white' text-anchor='middle'%3EOZ%3C/text%3E%3C/svg%3E" />
+
+    <style>
+        /* Сброс и плавность */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #2c1a4b;
+            background: linear-gradient(180deg, #8e38b5 0%, #a044ff 100%);
+            overflow-x: hidden;
+        }
+
+        /* Декоративный фон страницы */
+        .bg-decor {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .bg-decor .decor-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            animation: float 18s ease-in-out infinite;
+        }
+        .bg-decor .decor-blob-1 {
+            width: 500px;
+            height: 500px;
+            background: #d9c2ff;
+            top: 8%;
+            left: -150px;
+        }
+        .bg-decor .decor-blob-2 {
+            width: 420px;
+            height: 420px;
+            background: #c7b8ff;
+            bottom: 12%;
+            right: -130px;
+            animation-delay: 6s;
+        }
+        .bg-decor .decor-blob-3 {
+            width: 320px;
+            height: 320px;
+            background: #e6d9ff;
+            top: 55%;
+            left: 25%;
+            animation-delay: 12s;
+        }
+
+        /* Летящие вверх частицы по всему сайту */
+        .particles-fixed {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .particles-fixed .particle {
+            position: absolute;
+            bottom: -20px;
+            border-radius: 50%;
+            background: rgba(106, 48, 147, 0.25);
+            animation: rise linear infinite;
+        }
+
+        :root {
+            --primary-purple: #6a3093;
+            --secondary-purple: #a044ff;
+            --light-purple: #f3e8ff;
+            --text-medium: #52467a;
+            --border-radius: 16px;
+            --transition-speed: 0.3s;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 15px 30px rgba(106, 48, 147, 0.15);
+        }
+
+        /* Анимация элементов при скролле */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Навигация */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: background-color 0.5s ease, box-shadow 0.5s ease;
+            padding: 1rem 0;
+            background: #ffffff;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--light-purple);
+        }
+        .header.scrolled {
+            box-shadow: var(--shadow-md);
+            padding: 0.8rem 0;
+            backdrop-filter: saturate(180%) blur(10px);
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-purple);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-medium);
+            font-weight: 500;
+            position: relative;
+            transition: color var(--transition-speed) ease;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary-purple);
+            transition: width var(--transition-speed) ease;
+        }
+        .nav-links a:hover {
+            color: var(--primary-purple);
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: #2c1a4b;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+        .mobile-toggle.active .bar:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        .mobile-toggle.active .bar:nth-child(2) {
+            opacity: 0;
+        }
+        .mobile-toggle.active .bar:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        .nav-mobile {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #fff;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 2rem;
+        }
+        .nav-mobile.active {
+            display: flex;
+        }
+        .nav-mobile ul {
+            list-style: none;
+            text-align: center;
+        }
+        .nav-mobile a {
+            display: block;
+            padding: 1.5rem 0;
+            color: var(--primary-purple);
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+
+        /* Главный раздел */
+        .hero {
+            background: linear-gradient(180deg, var(--primary-purple) 0%, #8e38b5 50%, rgba(142, 56, 181, 0) 100%);
+            color: #fff;
+            padding: 140px 2rem 100px;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero h1 {
+            font-size: 3.8rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 300;
+            opacity: 0.95;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(4px);
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #fff, #f3e8ff, #d9c2ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .cta-button.ghost {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255,255,255,0.6);
+            box-shadow: none;
+        }
+        .cta-button.ghost:hover {
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.2);
+        }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+        .hero-stat {
+            text-align: center;
+        }
+        .hero-stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        .hero-stat-label {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+        .hero-badge,
+        .hero h1,
+        .hero p,
+        .hero-actions,
+        .hero-stats {
+            animation: heroFadeIn 1s ease both;
+        }
+        .hero h1 { animation-delay: 0.1s; }
+        .hero p { animation-delay: 0.2s; }
+        .hero-actions { animation-delay: 0.3s; }
+        .hero-stats { animation-delay: 0.4s; }
+        @keyframes heroFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 600px) {
+            .hero-stats {
+                gap: 1.5rem;
+            }
+            .hero-stat-number {
+                font-size: 1.5rem;
+            }
+        }
+        .cta-button {
+            display: inline-block;
+            background: #fff;
+            color: var(--primary-purple);
+            padding: 18px 50px;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: var(--border-radius);
+            transition: transform 0.3s cubic-bezier(0.2, 1, 0.2, 1), box-shadow 0.3s ease;
+            position: relative;
+            z-index: 1;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.25), var(--shadow-md);
+        }
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 0 6px rgba(255,255,255,0.4), var(--shadow-lg);
+        }
+
+        /* Анимированный фон главной */
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .hero-bg .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.5;
+            animation: float 14s ease-in-out infinite;
+        }
+        .hero-bg .blob-1 {
+            width: 420px;
+            height: 420px;
+            background: rgba(255, 255, 255, 0.18);
+            top: -120px;
+            left: -120px;
+        }
+        .hero-bg .blob-2 {
+            width: 320px;
+            height: 320px;
+            background: rgba(160, 68, 255, 0.4);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: 3s;
+        }
+        .hero-bg .blob-3 {
+            width: 260px;
+            height: 260px;
+            background: rgba(255, 255, 255, 0.14);
+            top: 25%;
+            right: 15%;
+            animation-delay: 6s;
+        }
+        .hero-bg .blob-4 {
+            width: 200px;
+            height: 200px;
+            background: rgba(160, 68, 255, 0.3);
+            top: 55%;
+            left: 12%;
+            animation-delay: 9s;
+        }
+        .hero-bg .particle {
+            position: absolute;
+            bottom: -20px;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: rise linear infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(40px, -50px) scale(1.1); }
+            66% { transform: translate(-30px, 30px) scale(0.95); }
+        }
+        @keyframes rise {
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateY(-110vh); opacity: 0; }
+        }
+        .hero h1,
+        .hero p,
+        .hero .cta-button,
+        .hero-badge,
+        .hero-actions,
+        .hero-stats {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Разделы */
+        .section {
+            padding: 100px 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 3rem;
+            color: var(--primary-purple);
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 0.75rem;
+            background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        .about-text p {
+            color: var(--text-medium);
+            font-size: 1.1rem;
+        }
+        .owners-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+            max-width: 300px;
+        }
+        .about-side {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+        }
+        .about-side .owner-card {
+            max-width: 320px;
+            width: 100%;
+        }
+        /* Симметричная компоновка "О нас" */
+        .about-center {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .about-center .owner-card {
+            max-width: 320px;
+            margin: 0 auto 2rem;
+        }
+        .about-center .about-text {
+            margin-bottom: 2rem;
+        }
+        .about-center .about-text p {
+            max-width: 700px;
+            margin: 0 auto 1rem;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .stats-row .stat-card {
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .stats-row .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .stats-row .stat-card:hover::before {
+            opacity: 1;
+        }
+        @media (max-width: 700px) {
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* 🎨 Добавлены стили для фотографий */
+        .owner-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            background: #fff;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease;
+            border: 1px solid var(--light-purple);
+        }
+        .owner-card:hover {
+            transform: translateY(-5px);
+        }
+        .owner-avatar { /* Это был старый стиль буквы */
+            display: none;
+        }
+        .owner-img { /* Новый класс для фото */
+            width: 100%; /* Растягиваем по ширине карточки */
+            aspect-ratio: 1 / 1; /* Квадратное изображение */
+            object-fit: cover; /* Обрезаем под квадрат */
+            border-radius: var(--border-radius); /* Плавные углы */
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .stat-card {
+            background: linear-gradient(180deg, #fff 0%, #f6efff 100%);
+            padding: 2.5rem 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--light-purple);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(106, 48, 147, 0.25);
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--secondary-purple);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        /* Карточки статистики в "О нас" */
+        .stats-stagger {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        .stats-stagger .stat-card {
+            max-width: 280px;
+            width: 100%;
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .stats-stagger .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .stats-stagger .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Этапы открытия ПВЗ */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        .step {
+            background: #fff;
+            border: 1px solid var(--light-purple);
+            border-radius: var(--border-radius);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .step:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+        .step-number {
+            display: inline-block;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+        }
+        .step h4 {
+            color: var(--primary-purple);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .step p {
+            color: var(--text-medium);
+            font-size: 0.95rem;
+        }
+        @media (max-width: 900px) {
+            .steps {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 600px) {
+            .steps {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+        .service-card {
+            background: linear-gradient(180deg, #fff 0%, #faf9ff 100%);
+            border: 1px solid var(--light-purple);
+            border-radius: var(--border-radius);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(106, 48, 147, 0.25);
+        }
+        .service-card:hover::before {
+            opacity: 1;
+        }
+        .service-card h4 {
+            margin-bottom: 1rem;
+            color: var(--primary-purple);
+            font-size: 1.4rem;
+        }
+        .service-card i {
+            font-size: 3rem;
+            color: var(--secondary-purple);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c1a4b;
+            margin: 1.5rem 0;
+        }
+
+        /* Тарифы услуг */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .service-card.featured {
+            border: 2px solid var(--secondary-purple);
+            box-shadow: var(--shadow-lg);
+        }
+        .service-card .badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.35rem 0.9rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .service-card .price {
+            font-size: 1.8rem;
+        }
+
+        /* Отзывы */
+        .reviews-section {
+            background: transparent;
+        }
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .review-card {
+            background: #fff;
+            border: 1px solid var(--light-purple);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        .review-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+        .review-stars {
+            color: var(--secondary-purple);
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            margin-bottom: 0.75rem;
+        }
+        .review-card p {
+            color: var(--text-medium);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .review-author {
+            font-weight: 700;
+            color: var(--primary-purple);
+            font-size: 0.95rem;
+        }
+        .review-card::before {
+            content: '\201C';
+            position: absolute;
+            top: 0.2rem;
+            right: 1rem;
+            font-size: 3.5rem;
+            line-height: 1;
+            color: var(--light-purple);
+            font-family: Georgia, serif;
+        }
+        @media (max-width: 900px) {
+            .reviews-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 600px) {
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Информация о компании */
+        .company-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        .company-info-item {
+            background: #fff;
+            border: 1px solid var(--light-purple);
+            border-radius: var(--border-radius);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .company-info-item:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+        .company-info-item i {
+            font-size: 2.2rem;
+            color: var(--secondary-purple);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .company-info-item h4 {
+            color: var(--primary-purple);
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+        }
+        .company-info-item p {
+            color: var(--text-medium);
+            font-size: 0.95rem;
+        }
+
+        /* Преимущества */
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .advantage-card {
+            background: linear-gradient(180deg, #fff 0%, #faf9ff 100%);
+            border: 1px solid var(--light-purple);
+            border-radius: var(--border-radius);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .advantage-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(106, 48, 147, 0.2);
+        }
+        .advantage-card i {
+            font-size: 2.5rem;
+            color: var(--secondary-purple);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .advantage-card h4 {
+            color: var(--primary-purple);
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+        }
+        .advantage-card p {
+            color: var(--text-medium);
+            font-size: 0.95rem;
+        }
+        @media (max-width: 900px) {
+            .company-info,
+            .advantages-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 600px) {
+            .company-info,
+            .advantages-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Карточки владельцев — кликабельные */
+        .owner-card {
+            cursor: pointer;
+        }
+        .owner-more {
+            display: inline-block;
+            margin-top: 0.75rem;
+            color: var(--secondary-purple);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+        .owner-card:hover .owner-more {
+            transform: translateX(4px);
+        }
+
+        /* Модальное окно */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(44, 26, 75, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 1rem;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal {
+            background: #fff;
+            border-radius: var(--border-radius);
+            max-width: 420px;
+            width: 100%;
+            padding: 2rem;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.3);
+            opacity: 0;
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+            text-align: center;
+        }
+        .modal-overlay.active .modal {
+            transform: scale(1);
+            opacity: 1;
+        }
+        .modal-close {
+            position: absolute;
+            top: 0.75rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            line-height: 1;
+            color: var(--text-medium);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .modal-close:hover {
+            color: var(--primary-purple);
+        }
+        .modal-img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--light-purple);
+            margin-bottom: 1rem;
+        }
+        .modal h3 {
+            color: var(--primary-purple);
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+        .modal-meta {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .modal-meta span {
+            background: var(--light-purple);
+            color: var(--primary-purple);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+        .modal p {
+            color: var(--text-medium);
+            font-size: 1rem;
+            white-space: pre-line;
+        }
+
+        /* Контакты */
+        .contact-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            max-width: 400px;
+            margin: 0 auto 3rem;
+        }
+        .contact-card {
+            background: #fff;
+            border: 1px solid var(--light-purple);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .contact-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+        .contact-card-img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--light-purple);
+            margin-bottom: 1rem;
+        }
+        .contact-card h3 {
+            color: var(--primary-purple);
+            font-size: 1.4rem;
+            margin-bottom: 0.25rem;
+        }
+        .contact-card-role {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            margin-bottom: 1.25rem;
+        }
+        .contact-card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .contact-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .contact-link.tg {
+            background: #e8f4fd;
+            color: #1d93d2;
+        }
+        .contact-link.ig {
+            background: var(--light-purple);
+            color: var(--primary-purple);
+        }
+        .contact-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .contact-extra {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            background: #fff;
+            border: 1px solid var(--light-purple);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+        }
+        .contact-extra div {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-medium);
+        }
+        .contact-extra i {
+            color: var(--primary-purple);
+        }
+        .contact-extra a {
+            color: var(--text-medium);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .contact-extra a:hover {
+            color: var(--secondary-purple);
+        }
+        @media (max-width: 700px) {
+            .contact-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+        .contact-info div {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .contact-info i {
+            font-size: 1.4rem;
+            margin-top: 3px;
+            color: var(--primary-purple);
+            width: 24px;
+            text-align: center;
+        }
+        .contact-info a {
+            color: var(--primary-purple);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .contact-info a:hover {
+            color: var(--secondary-purple);
+            text-decoration: underline;
+        }
+        .map-placeholder {
+            background: var(--light-purple);
+            height: 350px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-purple);
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+        }
+
+        footer {
+            background: linear-gradient(90deg, var(--primary-purple), #8e38b5);
+            color: #fff;
+            text-align: center;
+            padding: 3rem 2rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 2rem;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+        .footer-logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+        }
+        .footer-brand p {
+            opacity: 0.85;
+            max-width: 320px;
+        }
+        .footer-nav h4,
+        .footer-social h4 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+        .footer-nav ul {
+            list-style: none;
+        }
+        .footer-nav a {
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.85;
+            display: inline-block;
+            padding: 0.25rem 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .footer-nav a:hover {
+            opacity: 1;
+            transform: translateX(4px);
+        }
+        .footer-social a {
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.85;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0;
+            transition: opacity 0.3s ease;
+        }
+        .footer-social a:hover {
+            opacity: 1;
+        }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .back-to-top {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: #fff;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .back-to-top:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-3px);
+        }
+        @media (max-width: 700px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .footer-brand p {
+                margin: 0 auto;
+            }
+            .footer-social a {
+                justify-content: center;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .about-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                flex-direction: column;
+                background: #fff;
+                width: 80%;
+                height: 100vh;
+                text-align: left;
+                padding-top: 4rem;
+                transition: 0.5s ease;
+                z-index: 998;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            }
+            .nav-links.active {
+                left: 0;
+            }
+            .mobile-toggle {
+                display: flex;
+            }
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+            .section {
+                padding: 80px 1.5rem;
+            }
+            .section h2 {
+                font-size: 2.2rem;
+            }
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-decor" aria-hidden="true">
+    <div class="decor-blob decor-blob-1"></div>
+    <div class="decor-blob decor-blob-2"></div>
+    <div class="decor-blob decor-blob-3"></div>
+</div>
+
+<div class="particles-fixed" id="particlesFixed" aria-hidden="true"></div>
+
+<header class="header" id="header">
+    <div class="nav-container">
+        <div class="logo">
+            <svg class="logo-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="0" y="0" width="32" height="64" fill="#cb11ab"/>
+                <rect x="32" y="0" width="32" height="64" fill="#005bff"/>
+                <rect x="31" y="0" width="2" height="64" fill="#fff" opacity="0.7"/>
+                <text x="16" y="42" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#fff" text-anchor="middle">WB</text>
+                <text x="48" y="42" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#fff" text-anchor="middle">OZ</text>
+            </svg>
+            ПВЗ WB & OZON
+        </div>
+        <nav>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about">О нас</a></li>
+                <li><a href="#advantages">Преимущества</a></li>
+                <li><a href="#stats">Открытие ПВЗ</a></li>
+                <li><a href="#services">Услуги</a></li>
+                <li><a href="#reviews">Отзывы</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+        </nav>
+        <div class="mobile-toggle" id="mobileToggle" aria-label="Открыть меню" aria-expanded="false">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </div>
+</header>
+
+<div class="nav-mobile" id="navMobile">
+    <ul>
+        <li><a href="#about" onclick="closeMobileMenu()">О нас</a></li>
+        <li><a href="#advantages" onclick="closeMobileMenu()">Преимущества</a></li>
+        <li><a href="#stats" onclick="closeMobileMenu()">Открытие ПВЗ</a></li>
+        <li><a href="#services" onclick="closeMobileMenu()">Услуги</a></li>
+        <li><a href="#reviews" onclick="closeMobileMenu()">Отзывы</a></li>
+        <li><a href="#contact" onclick="closeMobileMenu()">Контакты</a></li>
+    </ul>
+</div>
+
+<main>
+    <section class="hero">
+        <div class="hero-bg" aria-hidden="true">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+            <div class="blob blob-4"></div>
+            <div class="particle" style="left: 8%; animation-duration: 9s; animation-delay: 0s;"></div>
+            <div class="particle" style="left: 22%; animation-duration: 12s; animation-delay: 2s;"></div>
+            <div class="particle" style="left: 38%; animation-duration: 8s; animation-delay: 4s;"></div>
+            <div class="particle" style="left: 55%; animation-duration: 11s; animation-delay: 1s;"></div>
+            <div class="particle" style="left: 70%; animation-duration: 9s; animation-delay: 5s;"></div>
+            <div class="particle" style="left: 85%; animation-duration: 13s; animation-delay: 3s;"></div>
+            <div class="particle" style="left: 95%; animation-duration: 10s; animation-delay: 6s;"></div>
+        </div>
+        <div class="hero-badge">🚀 Более 70 ПВЗ открыто под моим руководством</div>
+        <h1>Откройте ПВЗ,<br>который <span class="gradient-text">приносит прибыль</span></h1>
+        <p>Ольга проведёт вас от идеи до работающего пункта выдачи Wildberries и Ozon: поможет с помещением, документами и обучением команды.</p>
+        <div class="hero-actions">
+            <button class="cta-button" onclick="location.href='#contact'">Написать нам</button>
+            <a href="#services" class="cta-button ghost">Смотреть услуги</a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-number">70+</span>
+                <span class="hero-stat-label">ПВЗ запущено</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-number">98%</span>
+                <span class="hero-stat-label">Довольных партнёров</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-number">24/7</span>
+                <span class="hero-stat-label">На связи</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <h2 class="animate-on-scroll">О компании</h2>
+        <div class="about-center animate-on-scroll">
+            <div class="owner-card" onclick="openOwnerModal('olga')" role="button" tabindex="0" aria-label="Подробнее об Ольге">
+                <img src="olga.jpg.jpeg" alt="Ольга" class="owner-img">
+                <h4>Ольга</h4>
+                <p>Эксперт по Wildberries и Ozon, запуску новых точек.</p>
+            </div>
+            <div class="about-text">
+                <h3>Помогаю открывать и вести ПВЗ</h3>
+                <p>Я сама прошла путь от первого пункта выдачи до сети из 70+ точек. Теперь делюсь опытом: помогаю партнёрам открывать собственные ПВЗ Wildberries и Ozon, обучаю персонал и сопровождаю на каждом этапе.</p>
+                <p>За плечами — сотни успешных запусков, проверенные схемы и наработанные связи. Я знаю, как выбрать удачное помещение, правильно оформить документы, обучить команду и наладить процессы так, чтобы точка работала стабильно и приносила прибыль.</p>
+                <p>Со мной вы не останетесь один на один с вопросами: от идеи до работающего пункта рядом будет опытный наставник, который уже прошёл этот путь.</p>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card animate-on-scroll">
+                    <i class="fa-solid fa-store"></i>
+                    <span class="stat-number">70+</span>
+                    <span>ПВЗ запущено</span>
+                </div>
+                <div class="stat-card animate-on-scroll">
+                    <i class="fa-solid fa-face-smile"></i>
+                    <span class="stat-number">98%</span>
+                    <span>Довольных партнёров</span>
+                </div>
+                <div class="stat-card animate-on-scroll">
+                    <i class="fa-solid fa-headset"></i>
+                    <span class="stat-number">24/7</span>
+                    <span>На связи с вами</span>
+                </div>
+            </div>
+        </div>
+        <div class="company-info">
+            <div class="company-info-item animate-on-scroll">
+                <i class="fa-solid fa-bullseye"></i>
+                <h4>Наша миссия</h4>
+                <p>Помогать партнёрам открывать и развивать прибыльные ПВЗ Wildberries и Ozon, делясь опытом и знаниями.</p>
+            </div>
+            <div class="company-info-item animate-on-scroll">
+                <i class="fa-solid fa-heart"></i>
+                <h4>Наши ценности</h4>
+                <p>Честность, прозрачность и забота о каждом партнёре. Я всегда рядом и отвечаю за результат.</p>
+            </div>
+            <div class="company-info-item animate-on-scroll">
+                <i class="fa-solid fa-seedling"></i>
+                <h4>Наша история</h4>
+                <p>Начала с одного пункта выдачи, а сегодня помогаю открывать точки в разных городах.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="advantages" class="section">
+        <h2 class="animate-on-scroll">Наши преимущества</h2>
+        <p style="text-align: center; max-width: 700px; margin: 0 auto 3rem; color: var(--text-medium);" class="animate-on-scroll">
+            Почему мне доверяют открытие и развитие пунктов выдачи.
+        </p>
+        <div class="advantages-grid">
+            <div class="advantage-card animate-on-scroll" onclick="openInfoModal('Опыт 70+ запусков', 'Я открыла более 70 пунктов выдачи в разных городах. За это время отработала все этапы запуска: от выбора помещения до первых клиентов. Вы получаете готовые решения и проверенные схемы, которые экономят время и деньги.')" role="button" tabindex="0" aria-label="Подробнее: Опыт 70+ запусков">
+                <i class="fa-solid fa-medal"></i>
+                <h4>Опыт 70+ запусков</h4>
+                <p>Проверенные решения и готовые схемы, которые работают.</p>
+            </div>
+            <div class="advantage-card animate-on-scroll" onclick="openInfoModal('Полное сопровождение', 'Беру на себя весь процесс: подбор помещения, оформление документов, регистрация ПВЗ, обучение персонала и запуск. Вы всегда знаете, что происходит, и получаете отчёт на каждом этапе.')" role="button" tabindex="0" aria-label="Подробнее: Полное сопровождение">
+                <i class="fa-solid fa-route"></i>
+                <h4>Полное сопровождение</h4>
+                <p>От поиска помещения до запуска и развития точки.</p>
+            </div>
+            <div class="advantage-card animate-on-scroll" onclick="openInfoModal('Обучение персонала', 'Готовые программы обучения для вашей команды: как работать с клиентами, принимать и выдавать заказы, решать спорные ситуации. Ваши сотрудники будут работать уверенно с первого дня.')" role="button" tabindex="0" aria-label="Подробнее: Обучение персонала">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                <h4>Обучение персонала</h4>
+                <p>Готовые программы обучения для вашей команды.</p>
+            </div>
+            <div class="advantage-card animate-on-scroll" onclick="openInfoModal('Поддержка 24/7', 'Я на связи в любое время: отвечаю на вопросы, помогаю решать сложные ситуации и подсказываю, как улучшить работу точки. Вы никогда не останетесь без поддержки.')" role="button" tabindex="0" aria-label="Подробнее: Поддержка 24/7">
+                <i class="fa-solid fa-headset"></i>
+                <h4>Поддержка 24/7</h4>
+                <p>Отвечаем на любые вопросы в любое время.</p>
+            </div>
+            <div class="advantage-card animate-on-scroll" onclick="openInfoModal('Индивидуальный подход', 'Учитываю особенности вашего города, района и бюджета. Подбираю оптимальный формат и помогаю принять правильные решения именно для вашей ситуации.')" role="button" tabindex="0" aria-label="Подробнее: Индивидуальный подход">
+                <i class="fa-solid fa-user-gear"></i>
+                <h4>Индивидуальный подход</h4>
+                <p>Учитываем особенности вашего города и бюджета.</p>
+            </div>
+            <div class="advantage-card animate-on-scroll" onclick="openInfoModal('Гарантия результата', 'Более 98% моих партнёров работают стабильно и без проблем с проверками. Я отвечаю за результат и сопровождаю вас до тех пор, пока точка не начнёт приносить прибыль.')" role="button" tabindex="0" aria-label="Подробнее: Гарантия результата">
+                <i class="fa-solid fa-shield-halved"></i>
+                <h4>Гарантия результата</h4>
+                <p>Более 98% партнёров работают стабильно и без проблем.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="stats" class="section">
+        <h2 class="animate-on-scroll">Открытие ПВЗ</h2>
+        <p style="text-align: center; max-width: 700px; margin: 0 auto 3rem; color: var(--text-medium);" class="animate-on-scroll">
+          Я запустила более <strong>70 пунктов выдачи</strong> и помогаю открывать собственные точки. Беру на себя всё: от поиска помещения до запуска и дальнейшего ведения. Более <strong>98%</strong> моих учеников работают стабильно — без проблем с проверками и клиентами.
+        </p>
+        <div class="services-grid">
+            <div class="service-card animate-on-scroll">
+                <i class="fa-solid fa-location-dot"></i>
+                <h4>Подбор помещения</h4>
+                <p>Поможем найти выгодное место с высоким трафиком и адекватной арендой.</p>
+            </div>
+            <div class="service-card animate-on-scroll">
+                <i class="fa-solid fa-file-signature"></i>
+                <h4>Оформление и запуск</h4>
+                <p>Соберём документы, зарегистрируем ПВЗ и запустим точку без лишней бюрократии.</p>
+            </div>
+            <div class="service-card animate-on-scroll">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                <h4>Обучение и ведение</h4>
+                <p>Подготовим команду и будем сопровождать работу точки после открытия.</p>
+            </div>
+            <div class="service-card animate-on-scroll">
+                <i class="fa-solid fa-headset"></i>
+                <h4>Консультации</h4>
+                <p>Ответим на все вопросы: от выбора формата до решения сложных ситуаций.</p>
+            </div>
+        </div>
+        <div class="steps">
+            <div class="step animate-on-scroll">
+                <span class="step-number">01</span>
+                <h4>Консультация</h4>
+                <p>Обсуждаем ваши цели, город и бюджет, подбираем формат.</p>
+            </div>
+            <div class="step animate-on-scroll">
+                <span class="step-number">02</span>
+                <h4>Подбор помещения</h4>
+                <p>Находим выгодное место с высоким трафиком и арендой.</p>
+            </div>
+            <div class="step animate-on-scroll">
+                <span class="step-number">03</span>
+                <h4>Оформление и запуск</h4>
+                <p>Документы, регистрация, подготовка точки и обучение команды.</p>
+            </div>
+            <div class="step animate-on-scroll">
+                <span class="step-number">04</span>
+                <h4>Сопровождение</h4>
+                <p>Поддержка после открытия: консультации и помощь в развитии.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="section">
+        <h2 class="animate-on-scroll">Услуги</h2>
+        <p style="text-align: center; max-width: 700px; margin: 0 auto 3rem; color: var(--text-medium);" class="animate-on-scroll">
+            Выберите удобный формат сопровождения — я подстроюсь под ваши задачи и бюджет.
+        </p>
+        <div class="pricing-grid">
+            <div class="service-card animate-on-scroll" onclick="openInfoModal('Обычное ведение — 150 000 ₽', 'Что входит в онлайн-ведение:\n\n• Подбор помещения и проверка локации;\n• Помощь с документами и регистрацией ПВЗ;\n• Пошаговый план запуска и чек-листы;\n• Обучение персонала в онлайн-формате;\n• Сопровождение и консультации на всех этапах;\n• Разбор ошибок и рекомендации по улучшению работы.\n\nВы работаете в своём городе, а я веду вас по шагам и отвечаю на вопросы.')" role="button" tabindex="0" aria-label="Подробнее: Обычное ведение">
+                <i class="fa-solid fa-laptop"></i>
+                <h4>Обычное ведение</h4>
+                <p>Открытие и ведение ПВЗ в онлайн-формате: ведём вас по шагам, вы — в своём городе.</p>
+                <div class="price">150 000 ₽</div>
+            </div>
+            <div class="service-card featured animate-on-scroll" onclick="openInfoModal('Ведение + — 300 000 ₽', 'Что входит в формат «под ключ»:\n\n• Приезжаю в ваш город и беру процесс на себя;\n• Подбор помещения и переговоры с арендодателем;\n• Ремонт и подготовка точки к открытию;\n• Оформление документов и регистрация ПВЗ;\n• Обучение персонала на месте;\n• Запуск и первые дни работы вместе с вами;\n• Дальнейшее сопровождение и поддержка.\n\nВы получаете готовый работающий ПВЗ без вашего участия в рутине.')" role="button" tabindex="0" aria-label="Подробнее: Ведение +">
+                <span class="badge">Под ключ</span>
+                <i class="fa-solid fa-plane"></i>
+                <h4>Ведение +</h4>
+                <p>Приезжаем к вам и берём на себя весь процесс: от ремонта до первого клиента.</p>
+                <div class="price">300 000 ₽</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews" class="section reviews-section">
+        <h2 class="animate-on-scroll">Отзывы</h2>
+        <p style="text-align: center; max-width: 700px; margin: 0 auto 3rem; color: var(--text-medium);" class="animate-on-scroll">
+            Мне доверяют открытие и развитие пунктов выдачи. Вот что говорят мои партнёры.
+        </p>
+        <div class="reviews-grid">
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Открыли ПВЗ за 3 недели под ключ. Всё чётко, без лишних вопросов. Рекомендую!</p>
+                <div class="review-author">Анна Смирнова</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Ведение + — лучшие деньги, потраченные на бизнес. Прилетели и всё сделали сами.</p>
+                <div class="review-author">Дмитрий Ковалёв</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Онлайн-ведение очень удобно: отвечают быстро и по делу.</p>
+                <div class="review-author">Елена Морозова</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Помогли с выбором помещения — сразу видно опыт. Точка окупилась за 4 месяца.</p>
+                <div class="review-author">Игорь Волков</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Обучили персонал, теперь команда работает без моего участия. Спасибо за терпение!</p>
+                <div class="review-author">Мария Лебедева</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Консультации по открытию — просто спасение. Всё разложили по полочкам.</p>
+                <div class="review-author">Сергей Павлов</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Открыли с ними второй ПВЗ. Первый работает отлично, решили расширяться.</p>
+                <div class="review-author">Ольга Никитина</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Ведение +: приехали, запустили, обучили. Всё сделали, как обещали.</p>
+                <div class="review-author">Алексей Соколов</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Грамотные специалисты, чувствуется опыт. Рекомендую всем, кто хочет открыть ПВЗ.</p>
+                <div class="review-author">Наталья Фёдорова</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Помогли с документами и регистрацией. Никакой бюрократии — всё быстро.</p>
+                <div class="review-author">Павел Орлов</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Онлайн-ведение — отличный формат. Экономят моё время и нервы.</p>
+                <div class="review-author">Виктория Зайцева</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Чувствуется настоящая забота: подсказывают и помогают на всех этапах.</p>
+                <div class="review-author">Андрей Гусев</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Открыли точку в другом городе — прилетели и всё сделали сами. Впечатляет!</p>
+                <div class="review-author">Ксения Белова</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Наша точка работает без проблем с проверками — результат говорит сам за себя.</p>
+                <div class="review-author">Роман Титов</div>
+            </div>
+            <div class="review-card animate-on-scroll">
+                <div class="review-stars">★★★★★</div>
+                <p>Спасибо за обучение персонала! Теперь команда работает как часы.</p>
+                <div class="review-author">Екатерина Крылова</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section">
+        <h2 class="animate-on-scroll">Контакты</h2>
+        <p style="text-align: center; max-width: 700px; margin: 0 auto 3rem; color: var(--text-medium);" class="animate-on-scroll">
+            Напишите мне в удобный мессенджер — отвечу быстро и подскажу по всем вопросам.
+        </p>
+        <div class="contact-cards">
+            <div class="contact-card animate-on-scroll">
+                <img src="olga.jpg.jpeg" alt="Ольга" class="contact-card-img">
+                <h3>Ольга</h3>
+                <p class="contact-card-role">Wildberries и Ozon · Открытие ПВЗ</p>
+                <div class="contact-card-links">
+                    <a href="https://t.me/Tuzova_O_V" target="_blank" rel="noopener" class="contact-link tg">
+                        <i class="fa-brands fa-telegram"></i> @Tuzova_O_V
+                    </a>
+                    <a href="https://instagram.com/olga_tuzova" target="_blank" rel="noopener" class="contact-link ig">
+                        <i class="fa-brands fa-square-instagram"></i> @olga_tuzova
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="contact-extra">
+            <div>
+                <i class="fa-solid fa-phone"></i>
+                <a href="tel:+79991234567">+7 (999) 123-45-67</a>
+            </div>
+            <div>
+                <i class="fa-solid fa-envelope"></i>
+                <a href="mailto:info@pvz-example.ru">info@pvz-example.ru</a>
+            </div>
+            <div>
+                <i class="fa-solid fa-location-dot"></i> ул. Примерная, д. 1
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-brand">
+            <div class="footer-logo">ПВЗ WB & OZON</div>
+            <p>Помогаю открывать и развивать пункты выдачи Wildberries и Ozon в любом городе.</p>
+        </div>
+        <div class="footer-nav">
+            <h4>Навигация</h4>
+            <ul>
+                <li><a href="#about">О нас</a></li>
+                <li><a href="#advantages">Преимущества</a></li>
+                <li><a href="#services">Услуги</a></li>
+                <li><a href="#reviews">Отзывы</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+        </div>
+        <div class="footer-social">
+            <h4>Я на связи</h4>
+            <a href="https://t.me/Tuzova_O_V" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i> Ольга</a>
+            <a href="https://instagram.com/olga_tuzova" target="_blank" rel="noopener"><i class="fa-brands fa-square-instagram"></i> @olga_tuzova</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 ПВЗ WB & OZON. Работаем для вас каждый день.</p>
+        <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Наверх"><i class="fa-solid fa-arrow-up"></i></button>
+    </div>
+</footer>
+
+<!-- Модальное окно с биографией -->
+<div class="modal-overlay" id="ownerModal" aria-hidden="true">
+    <div class="modal">
+        <button class="modal-close" id="modalClose" aria-label="Закрыть">&times;</button>
+        <img id="modalImg" src="" alt="" class="modal-img">
+        <h3 id="modalName"></h3>
+        <div class="modal-meta">
+            <span id="modalAge"></span>
+            <span id="modalBirthday"></span>
+        </div>
+        <p id="modalBio"></p>
+    </div>
+</div>
+
+<!-- Модальное окно с доп. информацией -->
+<div class="modal-overlay" id="infoModal" aria-hidden="true">
+    <div class="modal">
+        <button class="modal-close" id="infoModalClose" aria-label="Закрыть">&times;</button>
+        <h3 id="infoModalTitle"></h3>
+        <p id="infoModalText"></p>
+    </div>
+</div>
+
+<script>
+    // Мобильное меню
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navMobile = document.getElementById('navMobile');
+    const navLinks = document.getElementById('navLinks');
+
+    mobileToggle.addEventListener('click', () => {
+        mobileToggle.classList.toggle('active');
+        navMobile.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        const isOpen = navMobile.classList.contains('active');
+        mobileToggle.setAttribute('aria-expanded', isOpen);
+    });
+
+    function closeMobileMenu() {
+        mobileToggle.classList.remove('active');
+        navMobile.classList.remove('active');
+        navLinks.classList.remove('active');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    // Тень шапки при скролле
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+        header.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Появление элементов при скролле
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+    // Блокировка прокрутки с компенсацией скроллбара (чтобы экран не дёргался)
+    function lockScroll() {
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        document.body.style.paddingRight = scrollbarWidth + 'px';
+        document.body.style.overflow = 'hidden';
+    }
+    function unlockScroll() {
+        document.body.style.paddingRight = '';
+        document.body.style.overflow = '';
+    }
+
+    // Модальное окно с биографией владельцев
+    const ownerData = {
+        olga: {
+            img: 'olga.jpg.jpeg',
+            name: 'Ольга',
+            age: '39 лет',
+            birthday: 'День рождения: 08.11.1986',
+            bio: 'Знаю всё о том, как открыть прибыльный ПВЗ Wildberries и Ozon. Поделюсь секретами сервиса 5*: от выбора помещения до обучения персонала. Уже 3 года помогаю партнёрам открывать и запускать свои точки.'
+        }
+    };
+
+    function openOwnerModal(key) {
+        const data = ownerData[key];
+        if (!data) return;
+        document.getElementById('modalImg').src = data.img;
+        document.getElementById('modalImg').alt = data.name;
+        document.getElementById('modalName').textContent = data.name;
+        document.getElementById('modalAge').textContent = data.age;
+        document.getElementById('modalBirthday').textContent = data.birthday;
+        document.getElementById('modalBio').textContent = data.bio;
+        const modal = document.getElementById('ownerModal');
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        lockScroll();
+    }
+
+    function closeOwnerModal() {
+        const modal = document.getElementById('ownerModal');
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        unlockScroll();
+    }
+
+    document.getElementById('modalClose').addEventListener('click', closeOwnerModal);
+    document.getElementById('ownerModal').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closeOwnerModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeOwnerModal();
+    });
+
+    // Плавная смена фона при скролле: от фиолетового (первая страница) к светлому (контакты)
+    const bgStops = [
+        { top: [142, 56, 181], bottom: [160, 68, 255] },   // первая страница: фиолетовый
+        { top: [243, 232, 255], bottom: [230, 217, 255] }, // середина: светло-фиолетовый
+        { top: [250, 249, 255], bottom: [238, 242, 255] }  // контакты: почти белый
+    ];
+
+    function lerpColor(a, b, t) {
+        return Math.round(a + (b - a) * t);
+    }
+
+    function updateBg() {
+        const doc = document.documentElement;
+        const max = doc.scrollHeight - window.innerHeight;
+        const progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        const eased = Math.pow(progress, 0.8);
+        const seg = eased * (bgStops.length - 1);
+        const idx = Math.min(Math.floor(seg), bgStops.length - 2);
+        const t = seg - idx;
+        const from = bgStops[idx];
+        const to = bgStops[idx + 1];
+        const top = [lerpColor(from.top[0], to.top[0], t), lerpColor(from.top[1], to.top[1], t), lerpColor(from.top[2], to.top[2], t)];
+        const bottom = [lerpColor(from.bottom[0], to.bottom[0], t), lerpColor(from.bottom[1], to.bottom[1], t), lerpColor(from.bottom[2], to.bottom[2], t)];
+        document.body.style.background = 'linear-gradient(180deg, rgb(' + top.join(',') + ') 0%, rgb(' + bottom.join(',') + ') 100%)';
+    }
+
+    let bgTicking = false;
+    function onBgScroll() {
+        if (!bgTicking) {
+            requestAnimationFrame(() => {
+                updateBg();
+                bgTicking = false;
+            });
+            bgTicking = true;
+        }
+    }
+    window.addEventListener('scroll', onBgScroll, { passive: true });
+    window.addEventListener('resize', onBgScroll);
+    updateBg();
+
+    // Летящие вверх частицы по всему сайту
+    const particlesLayer = document.getElementById('particlesFixed');
+    for (let i = 0; i < 25; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = 4 + Math.random() * 6;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (8 + Math.random() * 10) + 's';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        p.style.opacity = 0.3 + Math.random() * 0.4;
+        particlesLayer.appendChild(p);
+    }
+
+    // Модальное окно с доп. информацией
+    function openInfoModal(title, text) {
+        document.getElementById('infoModalTitle').textContent = title;
+        document.getElementById('infoModalText').textContent = text;
+        const modal = document.getElementById('infoModal');
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        lockScroll();
+    }
+
+    function closeInfoModal() {
+        const modal = document.getElementById('infoModal');
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        unlockScroll();
+    }
+
+    document.getElementById('infoModalClose').addEventListener('click', closeInfoModal);
+    document.getElementById('infoModal').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closeInfoModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeInfoModal();
+    });
+</script>
+
+</body>
+</html>
